@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
-    
     protected $primaryKey = 'id_reservation';
 
     protected $fillable = [

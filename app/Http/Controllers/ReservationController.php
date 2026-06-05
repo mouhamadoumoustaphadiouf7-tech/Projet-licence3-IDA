@@ -9,32 +9,37 @@ class ReservationController extends Controller
 {
     public function store(Request $request)
     {
-        $reservation = new Reservation();
-        $reservation->date_debut = $request->date_debut;
-        $reservation->date_fin = $request->date_fin;
-        $reservation->id_utilisateur = $request->id_utilisateur;
-        $reservation->id_vehicule = $request->id_vehicule;
-        $reservation->statut_reservation = 'Confirmée';
-        $reservation->save();
+        $donnees = $request->validate([
+            'date_debut'     => 'required',
+            'date_fin'       => 'required',
+            'id_utilisateur' => 'required',
+            'id_vehicule'    => 'required',
+        ]);
+        $donnees['statut_reservation'] = 'Confirmée';
+
+      
+        Reservation::create($donnees);
 
         return redirect()->back();
     }
 
     public function modifier(Request $request, $id)
     {
-        $reservation = Reservation::find($id);
-        $reservation->date_debut = $request->date_debut;
-        $reservation->date_fin = $request->date_fin;
-        $reservation->save();
+        $reservation = Reservation::findOrFail($id);
+        
+        $reservation->update([
+            'date_debut' => $request->date_debut,
+            'date_fin'   => $request->date_fin,
+        ]);
 
         return redirect()->back();
     }
 
     public function annuler($id)
     {
-        $reservation = Reservation::find($id);
-        $reservation->statut_reservation = 'Annulée';
-        $reservation->save();
+        Reservation::findOrFail($id)->update([
+            'statut_reservation' => 'Annulée'
+        ]);
 
         return redirect()->back();
     }
