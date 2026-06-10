@@ -58,7 +58,7 @@
 
         .btn-register {
             width: 100%;
-            background-color: #2563eb;
+            background-color: #061f57;
             color: white;
             border: none;
             padding: 12px;

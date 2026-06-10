@@ -41,7 +41,7 @@
 
         .form-control {
             background-color: #ffffff !important;
-            border: 1px solid #d1d5db;
+            border: 1px solid #0a2957;
             border-radius: 8px;
             padding: 10px 12px;
             color: #333;
@@ -117,7 +117,7 @@
                 Pas encore inscrit ?
             </a>
 
-            <button type="submit" class="btn text-white" style="background-color: #0c4cb4; width: 100%; padding: 10px; font-weight: bold;">Se connecter</button>
+            <button type="submit" class="btn text-white" style="background-color: #032f75d7; width: 100%; padding: 10px; font-weight: bold;">Se connecter
             </button>
         </div>
     </form>

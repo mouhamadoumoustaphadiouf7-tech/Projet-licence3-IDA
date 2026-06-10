@@ -35,7 +35,18 @@
                     @endauth
                 </div>
             @endif
-
+@if(session('success'))
+    <div style="
+        background-color: #d4edda;
+        color: #155724;
+        padding: 12px;
+        margin: 10px;
+        border-radius: 6px;
+        font-weight: bold;
+    ">
+        {{ session('success') }}
+    </div>
+@endif
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
                     <svg viewBox="0 0 651 192" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto text-gray-700 sm:h-20">

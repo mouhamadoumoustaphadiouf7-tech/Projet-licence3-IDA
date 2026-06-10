@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Afficher le formulaire d'inscription
+    //  Afficher inscription
     public function afficherFormulaire()
     {
         return view('inscription');
     }
 
-    // Traiter l'inscription
+    //  Inscription
     public function inscrire(Request $request)
     {
         $request->validate([
@@ -33,16 +33,16 @@ class AuthController extends Controller
         ]);
 
         return redirect()->route('login')
-            ->with('success', 'Inscription réussie !');
+            ->with('success', 'Inscription réussie 🎉 Vous pouvez vous connecter.');
     }
 
-    // Afficher le formulaire de connexion
+    //  Afficher login
     public function afficherLogin()
     {
         return view('login');
     }
 
-    // Traiter la connexion
+    //  Connexion + rôles
     public function connecter(Request $request)
     {
         $request->validate([
@@ -50,18 +50,49 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password
-        ])) {
+        //  AUTH FIXÉ
+        if (Auth::attempt($request->only('email', 'password'))) {
 
             $request->session()->regenerate();
 
-            return redirect()->route('accueil.test');
+            $user = Auth::user();
+
+            // sécurité si user inexistant
+            if (!$user) {
+                return redirect()->route('login')
+                    ->withErrors(['email' => 'Utilisateur introuvable']);
+            }
+
+            $role = strtolower($user->role); //  évite erreur de casse
+
+            //  ADMIN
+            if ($role === 'admin') {
+                return redirect()->route('admin.dashboard')
+                    ->with('success', 'Bienvenue Admin');
+            }
+
+            //  VENDEUR
+            if ($role === 'vendeur') {
+                return redirect()->route('vendeur.dashboard')
+                    ->with('success', 'Bienvenue Vendeur');
+            }
+
+            //  CLIENT
+            if ($role === 'client') {
+                return redirect()->route('accueil.test')
+                    ->with('success', 'Bienvenue Client');
+            }
+
+            //  rôle inconnu
+            Auth::logout();
+
+            return redirect()->route('login')
+                ->withErrors(['email' => 'Rôle utilisateur invalide']);
         }
 
+        //  login échoué
         return back()->withErrors([
-            'email' => 'Email ou mot de passe incorrect.',
+            'email' => 'Email ou mot de passe incorrect.'
         ]);
     }
 }
