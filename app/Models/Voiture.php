@@ -22,7 +22,7 @@ class Voiture extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function reservations()
+    public function reservations(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Reservation::class);
     }

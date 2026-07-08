@@ -14,13 +14,15 @@ class Reservation extends Model
         'voiture_id'
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function voiture()
     {
         return $this->belongsTo(Voiture::class);
+    }
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

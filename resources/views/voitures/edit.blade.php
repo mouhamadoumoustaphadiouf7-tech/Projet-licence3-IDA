@@ -15,11 +15,11 @@
             <span>/</span>
             <a href="/voitures" class="hover:text-white transition">Voitures</a>
             <span>/</span>
-            <span class="text-gray-200">Ajouter</span>
+            <span class="text-gray-200">Modifier</span>
         </div>
 
         <!-- HEADER -->
-        <h2 class="text-3xl font-bold text-white mb-6">Ajouter une voiture</h2>
+        <h2 class="text-3xl font-bold text-white mb-6">Modifier voiture</h2>
 
         <!-- ERREURS DE VALIDATION -->
         @if($errors->any())
@@ -33,20 +33,31 @@
         @endif
 
         <!-- FORMULAIRE -->
-        <form method="POST" action="/voitures" enctype="multipart/form-data"
+        <form method="POST" action="/voitures/{{ $voiture->id }}" enctype="multipart/form-data"
               class="bg-white/5 p-6 rounded-xl border border-white/10 space-y-5">
             @csrf
+            @method('PUT')
+
+            <!-- IMAGE ACTUELLE -->
+            @if($voiture->image)
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Image actuelle</label>
+                    <img src="{{ asset('storage/' . $voiture->image) }}"
+                         alt="{{ $voiture->marque }} {{ $voiture->modele }}"
+                         class="h-32 w-48 object-cover rounded-lg border border-white/10">
+                </div>
+            @endif
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Marque</label>
-                    <input type="text" name="marque" placeholder="Ex : Toyota" value="{{ old('marque') }}"
+                    <input type="text" name="marque" value="{{ old('marque', $voiture->marque) }}"
                            class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Modèle</label>
-                    <input type="text" name="modele" placeholder="Ex : RAV4" value="{{ old('modele') }}"
+                    <input type="text" name="modele" value="{{ old('modele', $voiture->modele) }}"
                            class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50">
                 </div>
             </div>
@@ -54,7 +65,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Prix (FCFA)</label>
-                    <input type="number" name="prix" placeholder="Ex : 15000000" value="{{ old('prix') }}"
+                    <input type="number" name="prix" value="{{ old('prix', $voiture->prix) }}"
                            class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50">
                 </div>
 
@@ -62,32 +73,34 @@
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">Type</label>
                     <select name="type"
                             class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50">
-                        <option value="vente" class="bg-[#0B0F1A]" @selected(old('type') === 'vente')>Vente</option>
-                        <option value="location" class="bg-[#0B0F1A]" @selected(old('type') === 'location')>Location</option>
+                        <option value="vente" class="bg-[#0B0F1A]" {{ old('type', $voiture->type) == 'vente' ? 'selected' : '' }}>Vente</option>
+                        <option value="location" class="bg-[#0B0F1A]" {{ old('type', $voiture->type) == 'location' ? 'selected' : '' }}>Location</option>
                     </select>
                 </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1.5">Image</label>
+                <label class="block text-sm font-medium text-gray-300 mb-1.5">
+                    Nouvelle image <span class="text-gray-500 font-normal">(optionnel)</span>
+                </label>
                 <input type="file" name="image"
                        class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:bg-white/10 file:text-white file:text-sm hover:file:bg-white/20 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-300 mb-1.5">Description</label>
-                <textarea name="description" rows="4" placeholder="Décrivez la voiture..."
-                          class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50">{{ old('description') }}</textarea>
+                <textarea name="description" rows="4"
+                          class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400/50">{{ old('description', $voiture->description) }}</textarea>
             </div>
 
             <!-- ACTIONS -->
             <div class="flex items-center gap-3 pt-2">
                 <button type="submit"
                         class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-violet-600 text-white px-5 py-2.5 rounded-lg font-medium hover:opacity-90 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    Ajouter
+                    Modifier
                 </button>
 
                 <a href="/voitures"
