@@ -25,3 +25,10 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+<<<<<<< HEAD
+=======
+
+# Continuity
+SESSION_HANDOFF.md
+.continuity/
+>>>>>>> origin/main
